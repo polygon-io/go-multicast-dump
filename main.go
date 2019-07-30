@@ -9,6 +9,7 @@ import (
 )
 
 var maddr = flag.String("a", "", "Multicast address to broadcast to")
+var intf = flag.String("i", "", "Multicast interface to listen on")
 
 const (
 	maxDatagramSize = 8192
@@ -30,7 +31,12 @@ func serveMulticastUDP(a string, h func(*net.UDPAddr, int, []byte)) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	l, err := net.ListenMulticastUDP("udp", nil, addr)
+	iface, err := net.InterfaceByName( *intf )
+	if err != nil {
+		log.Println("Error using interface:", *intf, "Error:", err)
+		iface = nil
+	}
+	l, err := net.ListenMulticastUDP("udp", iface, addr)
 	l.SetReadBuffer(maxDatagramSize)
 	for {
 		b := make([]byte, maxDatagramSize)
