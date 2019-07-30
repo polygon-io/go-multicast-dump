@@ -22,12 +22,13 @@ func main() {
 
 func msgHandler(src *net.UDPAddr, n int, b []byte) {
 	log.Println(n, "bytes read from", src)
-	log.Println(hex.Dump(b[:n]))
+	log.Println("\n" + hex.Dump(b[:n]))
 }
 
 func serveMulticastUDP(a string, h func(*net.UDPAddr, int, []byte)) {
 	fmt.Println("Listening to:", a)
 	addr, err := net.ResolveUDPAddr("udp", a)
+	
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,12 +39,13 @@ func serveMulticastUDP(a string, h func(*net.UDPAddr, int, []byte)) {
 	}
 	l, err := net.ListenMulticastUDP("udp", iface, addr)
 	l.SetReadBuffer(maxDatagramSize)
+	b := make([]byte, maxDatagramSize)
 	for {
-		b := make([]byte, maxDatagramSize)
-		n, src, err := l.ReadFromUDP(b)
-		if err != nil {
+		bytesRead, src, err := l.ReadFromUDP(b)
+		if (err != nil) {
 			log.Fatal("ReadFromUDP failed:", err)
 		}
-		h(src, n, b)
+		if (bytesRead == 0) { continue; }
+		h(src, bytesRead, b)
 	}
 }
