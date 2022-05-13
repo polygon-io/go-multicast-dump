@@ -1,0 +1,16 @@
+version: '2.2'
+
+services:
+  receiver:
+    container_name: multicast-recv
+    image: python:3.10.4
+    command: ["python", "-u", "/root/recv.py"]
+    volumes:
+      - $PWD:/root
+  
+  sender:
+    container_name: multicast-send
+    image: python:3.10.4
+    command: ["bash", "-c", "sleep 3 && python -u /root/send.py"]
+    volumes:
+      - $PWD:/root

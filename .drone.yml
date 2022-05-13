@@ -1,0 +1,26 @@
+---
+kind: pipeline
+type: docker
+name: test multicast in drone
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: multicast-recv
+    image: python:3.10.4
+    commands: 
+      - python -u ./recv.py
+  
+  - name: multicast-recv
+    image: python:3.10.4
+    commands: 
+      - sleep 5
+      - python -u ./send.py
+
+trigger:
+  branch:
+  - multicast-test
+  event:
+  - push
