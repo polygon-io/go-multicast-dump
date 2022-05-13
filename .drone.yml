@@ -13,7 +13,7 @@ steps:
     commands: 
       - python -u ./recv.py
   
-  - name: multicast-recv
+  - name: multicast-send
     image: python:3.10.4
     commands: 
       - sleep 5
