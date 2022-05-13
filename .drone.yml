@@ -12,12 +12,14 @@ steps:
     image: python:3.10.4
     commands: 
       - python -u ./recv.py
-  
+
+services: 
   - name: multicast-send
     image: python:3.10.4
     commands: 
       - sleep 5
       - python -u ./send.py
+      - sleep 5
 
 trigger:
   branch:
